@@ -1,0 +1,4 @@
+*.xcuserdatad
+*.xcscmblueprint
+xcuserdata
+.DS_Store
