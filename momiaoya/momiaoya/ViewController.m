@@ -17,6 +17,8 @@
 @property(nonatomic,strong)UICollectionView *collectionView;
 @property CGFloat frameWidth;
 @property CGFloat frameHeight;
+@property(nonatomic,strong)UINavigationController *nc1;
+@property(nonatomic,strong)UIViewController *vc2;
 
 @end
 
@@ -27,35 +29,15 @@
     
     NSLog(@"###test momiaoya");
     
-    self.title = @"自己制作不被APP图标遮挡の墙纸";
+//    self.title = @"自己制作不被APP图标遮挡の墙纸";
     CGRect rect = [UIScreen mainScreen].bounds;
     self.frameWidth = rect.size.width - 10;
     self.frameHeight = (rect.size.width - 10) * 2 / 3;
     
-    
-    
-    
-    UIViewController *vc1=[[UIViewController alloc] init];
-//    vc1.view.backgroundColor = [UIColor orangeColor];
-    vc1.tabBarItem.title = @"test";
-    vc1.tabBarItem.badgeValue = @"22";
-    
-    self.viewControllers = @[vc1];
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.tabBarController.tabBar.translucent = NO;
-    
-    
-    
-    
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    CGRect rect = self.view.bounds;
+    
     rect.size.height = rect.size.height - 49;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:rect collectionViewLayout:layout];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
     self.collectionView.backgroundColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:0.5];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -69,7 +51,7 @@
     
     
     
-    [self.view addSubview:self.collectionView];
+//    [self.view addSubview:self.collectionView];
     
     
     //配置UICollectionViewFlowLayout属性
@@ -88,7 +70,39 @@
     layout.sectionInset = UIEdgeInsetsMake(20, 10, 20, 0);
     //垂直滚动(水平滚动设置UICollectionViewScrollDirectionHorizontal)
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+
+    
+    
+    
+    UIViewController *vc1 = [[UIViewController alloc] init];
+    vc1.title = @"自己制作不被APP图标遮挡の墙纸";
+    [vc1.view addSubview:self.collectionView];
+    self.nc1 = [[UINavigationController alloc] initWithRootViewController:vc1];
+    
+    [self.nc1.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                  [UIFont fontWithName:@"Helvetica" size:18.0], NSFontAttributeName, nil]
+                        forState:UIControlStateNormal];
+    self.nc1.tabBarItem.title = @"精选";
+    self.nc1.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, -10);
+    
+    
+    self.vc2=[[UIViewController alloc] init];
+    self.vc2.tabBarItem.title = @"test";
+    self.vc2.tabBarItem.badgeValue = @"22";
+    
+    self.viewControllers = @[self.nc1];
+//    self.edgesForExtendedLayout = UIRectEdgeNone;
+//    self.tabBarController.tabBar.translucent = NO;
+    
+    
+    
+    
+    
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+    }
 
 // 1个section
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -174,11 +188,11 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSLog(@"####didSelectItemAtIndexPath:%ld", indexPath.row + 1);
     MMPhotoEditViewController *pe = [[MMPhotoEditViewController alloc] init];
     pe.photoFileName = [NSString stringWithFormat:@"%02zd", indexPath.row + 1];
     
-    [self.navigationController pushViewController:pe animated:YES];
+    [self.nc1 pushViewController:pe animated:YES];
+    NSLog(@"####didSelectItemAtIndexPath:%ld", indexPath.row + 1);
 }
 
 @end

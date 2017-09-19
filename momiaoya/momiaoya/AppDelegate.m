@@ -25,10 +25,10 @@
     ViewController *vc = [[ViewController alloc] init];
 //    MMPhotoEditViewController *pe = [[MMPhotoEditViewController alloc] init];
     
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
 //    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:pe];
     
-    [self.window setRootViewController:nav];
+    [self.window setRootViewController:vc];
     [self.window makeKeyAndVisible];
     
     return YES;

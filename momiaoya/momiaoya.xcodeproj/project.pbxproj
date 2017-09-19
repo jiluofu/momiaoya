@@ -27,7 +27,6 @@
 		63A770041F6BC209001492C4 /* 11.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63A76FF71F6BC1F8001492C4 /* 11.jpg */; };
 		63A770051F6BC209001492C4 /* 12.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63A76FF81F6BC1F8001492C4 /* 12.jpg */; };
 		63A770061F6BC209001492C4 /* 13.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63A76FF91F6BC1F8001492C4 /* 13.jpg */; };
-		63CF28F51F6FC31800BBBEC7 /* MMTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CF28F41F6FC31700BBBEC7 /* MMTabViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,8 +56,6 @@
 		63A76FF71F6BC1F8001492C4 /* 11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 11.jpg; sourceTree = "<group>"; };
 		63A76FF81F6BC1F8001492C4 /* 12.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 12.jpg; sourceTree = "<group>"; };
 		63A76FF91F6BC1F8001492C4 /* 13.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 13.jpg; sourceTree = "<group>"; };
-		63CF28F31F6FC31700BBBEC7 /* MMTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTabViewController.h; sourceTree = "<group>"; };
-		63CF28F41F6FC31700BBBEC7 /* MMTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTabViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,8 +99,6 @@
 				633066001F666644008325AE /* MMPhotoCell.m */,
 				63A76FCC1F6B87B4001492C4 /* MMPhotoEditViewController.h */,
 				63A76FCD1F6B87B4001492C4 /* MMPhotoEditViewController.m */,
-				63CF28F31F6FC31700BBBEC7 /* MMTabViewController.h */,
-				63CF28F41F6FC31700BBBEC7 /* MMTabViewController.m */,
 				6364A4E71F62921600F3E09F /* Info.plist */,
 				6364A4D61F62921600F3E09F /* Supporting Files */,
 			);
@@ -224,7 +219,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63CF28F51F6FC31800BBBEC7 /* MMTabViewController.m in Sources */,
 				63A76FCE1F6B87B4001492C4 /* MMPhotoEditViewController.m in Sources */,
 				633066011F666644008325AE /* MMPhotoCell.m in Sources */,
 				6364A4DE1F62921600F3E09F /* ViewController.m in Sources */,
