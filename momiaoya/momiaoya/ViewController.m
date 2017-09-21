@@ -11,6 +11,8 @@
 #import "MMPhotoEditViewController.h"
 #import "MMTabViewController.h"
 
+#import <Photos/Photos.h>
+
 #define cellidentifier @"PHOTO_CELL"
 
 @interface ViewController ()
@@ -94,7 +96,24 @@
 //    self.edgesForExtendedLayout = UIRectEdgeNone;
 //    self.tabBarController.tabBar.translucent = NO;
     
-    
+//    // 获得所有的自定义相簿
+//    PHFetchResult<PHAssetCollection *> *assetCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+//
+//    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+//    // 同步获得图片, 只会返回1张图片
+//    options.synchronous = YES;
+//
+//    PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsInAssetCollection:assetCollections[0] options:nil];
+//    for (PHAsset *asset in assets) {
+//        // 是否要原图
+//        CGSize size = CGSizeMake(asset.pixelWidth, asset.pixelHeight);
+//
+//        // 从asset中获得图片
+//        [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+//            NSLog(@"%@", result);
+//        }];
+//    }
+//
     
     
     
