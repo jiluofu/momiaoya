@@ -24,6 +24,10 @@
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:self.photoFileName ofType:@"jpg"];
     UIImage *image = [UIImage imageWithContentsOfFile:filePath];
+    if (self.tag == 1) {
+        
+        image = self.localPhotoImage;
+    }
     
 //    image = [MMPhotoEditViewController imageResize:image];
     
@@ -214,7 +218,7 @@
         
     }];
     // 2秒后执行
-    [self performSelector:@selector(msgIntroDismiss:)withObject:alert afterDelay:4.0];
+    [self performSelector:@selector(msgIntroDismiss:)withObject:alert afterDelay:2.0];
     
 }
 

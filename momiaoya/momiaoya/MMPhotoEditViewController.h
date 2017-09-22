@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 
 @interface MMPhotoEditViewController : UIViewController <UIGestureRecognizerDelegate>
 @property NSString *photoFileName;
+@property NSInteger tag;
+@property UIImage *localPhotoImage;
 @end
