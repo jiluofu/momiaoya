@@ -16,6 +16,7 @@
 
 #define cellidentifier @"PHOTO_CELL"
 #define cellidentifierlocal @"LOCAL_PHOTO_CELL"
+#define REFRESH_HEIGHT 50
 
 @interface ViewController ()
 @property(nonatomic,strong)UICollectionView *collectionView;
@@ -26,6 +27,8 @@
 @property(nonatomic,strong)UINavigationController *nc2;
 @property(nonatomic,strong)NSMutableArray *localPhotoArr;
 @property(nonatomic,strong)PHFetchResult<PHAsset *> *assets;
+@property(nonatomic,strong)UILabel *refreshLabel;
+@property(nonatomic,strong)UILabel *moreLabel;
 
 @end
 
@@ -36,13 +39,27 @@
     
     NSLog(@"###test momiaoya");
     
+
+    
     CGRect rect = [UIScreen mainScreen].bounds;
     self.frameWidth = rect.size.width - 10;
     self.frameHeight = (rect.size.width - 10) * 2 / 3;
+    self.refreshLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0 - REFRESH_HEIGHT, rect.size.width, REFRESH_HEIGHT)];
+    self.refreshLabel.backgroundColor = [UIColor redColor];
+    self.refreshLabel.font = [UIFont boldSystemFontOfSize:12.0];
+    self.refreshLabel.textAlignment = NSTextAlignmentCenter;
+    self.refreshLabel.text = @"下拉刷新";
+    
+//    self.moreLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, REFRESH_HEIGHT, rect.size.width, REFRESH_HEIGHT)];
+//    self.moreLabel.backgroundColor = [UIColor redColor];
+//    self.moreLabel.font = [UIFont boldSystemFontOfSize:12.0];
+//    self.moreLabel.textAlignment = NSTextAlignmentCenter;
+//    self.moreLabel.text = @"上拉加载";
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     
     rect.size.height = rect.size.height - 49;
+    
     
     
     
@@ -68,6 +85,7 @@
     layout.sectionInset = UIEdgeInsetsMake(20, 10, 20, 0);
     //垂直滚动(水平滚动设置UICollectionViewScrollDirectionHorizontal)
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+//    layout.headerReferenceSize = CGSizeMake(0, 30);
 
     
     
@@ -176,7 +194,7 @@
 
 // 每个section中有8个item
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return  13;
+    return  10;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -290,5 +308,80 @@
     
     NSLog(@"####didSelectItemAtIndexPath:%ld", indexPath.row + 1);
 }
+
+// 下拉刷新
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
+    if (scrollView.contentOffset.y < -30 ) {
+        [UIView animateWithDuration:1.0 animations:^{
+            
+            [scrollView addSubview:self.refreshLabel];
+            
+            [scrollView setContentInset:UIEdgeInsetsMake(REFRESH_HEIGHT, 0, 0, 0)];
+            
+        } completion:^(BOOL finished) {
+            // 发起网络请求
+            [scrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+            [self.collectionView reloadData];
+        }];
+    }
+    else if (scrollView.contentOffset.y > 50 ) {
+        
+        
+        
+        [UIView animateWithDuration:1.0 animations:^{
+            
+            if (!self.moreLabel) {
+                
+                self.moreLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, scrollView.contentSize.height, self.refreshLabel.frame.size.width, REFRESH_HEIGHT)];
+            }
+            
+            self.moreLabel.backgroundColor = [UIColor redColor];
+            self.moreLabel.font = [UIFont boldSystemFontOfSize:12.0];
+            self.moreLabel.textAlignment = NSTextAlignmentCenter;
+            self.moreLabel.text = @"上拉加载";
+            NSLog(@"###height:%f", scrollView.frame.size.height);
+            self.moreLabel.frame = CGRectMake(0, scrollView.contentSize.height, self.moreLabel.frame.size.width, self.moreLabel.frame.size.height);
+            [scrollView addSubview:self.moreLabel];
+            
+            [scrollView setContentInset:UIEdgeInsetsMake(0, 0, REFRESH_HEIGHT, 0)];
+            
+        } completion:^(BOOL finished) {
+            // 发起网络请求
+            [scrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+//            [self.collectionView reloadData];
+        }];
+    }
+}
+
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+//{
+//
+//    NSLog(@"%f",scrollView.contentOffset.y);
+//    NSLog(@"%f",scrollView.frame.size.height);
+//    NSLog(@"%f",scrollView.contentSize.height);
+//    /**
+//     *  关键-->
+//     *  scrollView一开始并不存在偏移量,但是会设定contentSize的大小,所以contentSize.height永远都会比contentOffset.y高一个手机屏幕的
+//     *  高度;上拉加载的效果就是每次滑动到底部时,再往上拉的时候请求更多,那个时候产生的偏移量,就能让contentOffset.y + 手机屏幕尺寸高大于这
+//     *  个滚动视图的contentSize.height
+//     */
+//    if (scrollView.contentOffset.y + scrollView.frame.size.height >= scrollView.contentSize.height) {
+//
+//        NSLog(@"%d %s",__LINE__,__FUNCTION__);
+//        [UIView commitAnimations];
+//
+//        [UIView animateWithDuration:1.0 animations:^{
+//            //  frame发生的偏移量,距离底部往上提高60(可自行设定)
+//            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 60, 0);
+//        } completion:^(BOOL finished) {
+//
+//            /**
+//             *  发起网络请求,请求加载更多数据
+//             *  然后在数据请求回来的时候,将contentInset改为(0,0,0,0)
+//             */
+//        }];
+//
+//    }
+//}
 
 @end
