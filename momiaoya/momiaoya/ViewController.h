@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UITabBarController<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITabBarDelegate>
+@interface ViewController : UITabBarController<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITabBarDelegate,UITabBarControllerDelegate>
 
 + (nullable UIImage *)imageResize:(nullable UIImage *)image rect:(CGRect)rect;
 @end

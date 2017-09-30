@@ -14,8 +14,8 @@
 
 #import <Photos/Photos.h>
 
-#define cellidentifier @"PHOTO_CELL"
-#define cellidentifierlocal @"LOCAL_PHOTO_CELL"
+#define PHOTO_CELL @"PHOTO_CELL"
+#define LOCAL_PHOTO_CELL @"LOCAL_PHOTO_CELL"
 #define REFRESH_HEIGHT 50
 
 @interface ViewController ()
@@ -29,6 +29,8 @@
 @property(nonatomic,strong)PHFetchResult<PHAsset *> *assets;
 @property(nonatomic,strong)UILabel *refreshLabel;
 @property(nonatomic,strong)UILabel *moreLabel;
+@property NSInteger num;
+@property NSInteger tabTag;
 
 @end
 
@@ -39,8 +41,9 @@
     
     NSLog(@"###test momiaoya");
     
-
     
+
+    self.num = 10;
     CGRect rect = [UIScreen mainScreen].bounds;
     self.frameWidth = rect.size.width - 10;
     self.frameHeight = (rect.size.width - 10) * 2 / 3;
@@ -56,36 +59,22 @@
 //    self.moreLabel.textAlignment = NSTextAlignmentCenter;
 //    self.moreLabel.text = @"上拉加载";
     
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     
     rect.size.height = rect.size.height - 49;
-    
-    
-    
-    
-    
-    
-    
-//    [self.view addSubview:self.collectionView];
-    
-    
-    //配置UICollectionViewFlowLayout属性
-    
-    
-    //每个itemsize的大小
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake(self.frameWidth / 2, self.frameHeight / 2);
-    //行与行的最小间距
     layout.minimumLineSpacing = 5;
-    
-    //每行的item与item之间最小间隔（如果）
     layout.minimumInteritemSpacing = 0;
-    //每个section的头部大小
-    //    layout.headerReferenceSize = CGSizeMake(44, 44);
-    //每个section距离上方和下方20，左方和右方10
     layout.sectionInset = UIEdgeInsetsMake(20, 10, 20, 0);
-    //垂直滚动(水平滚动设置UICollectionViewScrollDirectionHorizontal)
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-//    layout.headerReferenceSize = CGSizeMake(0, 30);
+    
+    UICollectionViewFlowLayout *layout1 = [[UICollectionViewFlowLayout alloc] init];
+    layout1.itemSize = CGSizeMake(self.frameWidth / 2, self.frameHeight / 2);
+    layout1.minimumLineSpacing = 5;
+    layout1.minimumInteritemSpacing = 0;
+    layout1.sectionInset = UIEdgeInsetsMake(20, 10, 20, 0);
+    layout1.scrollDirection = UICollectionViewScrollDirectionVertical;
+
 
     
     
@@ -104,7 +93,7 @@
     
     
     
-    [self.collectionView registerClass:[MMPhotoCell class] forCellWithReuseIdentifier:@"PHOTO_CELL"];
+    [self.collectionView registerClass:[MMPhotoCell class] forCellWithReuseIdentifier:PHOTO_CELL];
     [vc1.view addSubview:self.collectionView];
     
     self.nc1 = [[UINavigationController alloc] initWithRootViewController:vc1];
@@ -113,13 +102,14 @@
                                   [UIFont fontWithName:@"Helvetica" size:18.0], NSFontAttributeName, nil]
                         forState:UIControlStateNormal];
     self.nc1.tabBarItem.title = @"精选";
+    self.nc2.tabBarItem.tag = 0;
     self.nc1.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, -10);
     
     
     UIViewController *vc2 = [[UIViewController alloc] init];
     vc2.navigationItem.title = @"本地相册";
     vc2.edgesForExtendedLayout = UIRectEdgeNone;
-    self.collectionView1 = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    self.collectionView1 = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout1];
     self.collectionView1.backgroundColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:0.5];
     
     self.collectionView1.delegate = self;
@@ -130,7 +120,7 @@
     
     
     
-    [self.collectionView1 registerClass:[MMPhotoCell class] forCellWithReuseIdentifier:@"PHOTO_CELL"];
+    [self.collectionView1 registerClass:[MMPhotoCell class] forCellWithReuseIdentifier:LOCAL_PHOTO_CELL];
     [vc2.view addSubview:self.collectionView1];
     self.nc2 = [[UINavigationController alloc] initWithRootViewController:vc2];
     
@@ -138,6 +128,7 @@
                                                  [UIFont fontWithName:@"Helvetica" size:18.0], NSFontAttributeName, nil]
                                        forState:UIControlStateNormal];
     self.nc2.tabBarItem.title = @"相册";
+    self.nc2.tabBarItem.tag = 1;
     self.nc2.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, -10);
     
     self.viewControllers = @[self.nc1, self.nc2];
@@ -194,11 +185,37 @@
 
 // 每个section中有8个item
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return  10;
+    
+//    if (collectionView.tag == 1) {
+//
+//        return [self.localPhotoArr count];
+//
+//    }
+//    else if (collectionView.tag == 0) {
+//
+//        return 13;
+//    }
+    
+    return self.num;
+    
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    MMPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellidentifier forIndexPath:indexPath];
+    
+    MMPhotoCell *cell = nil;
+    
+    
+    if (collectionView.tag == 0) {
+        
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:PHOTO_CELL forIndexPath:indexPath];
+    }
+    else if (collectionView.tag == 1) {
+        
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:LOCAL_PHOTO_CELL forIndexPath:indexPath];
+    }
+    
+
+    
 //    cell.label.text = [NSString stringWithFormat:@"%d",indexPath.item];
     
 //    NSURL *url = [NSURL URLWithString: @"https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo_top_ca79a146.png"];
@@ -212,7 +229,7 @@
     
     
     
-    NSString *name = [NSString stringWithFormat:@"%02zd", indexPath.row + 1];
+    NSString *name = [NSString stringWithFormat:@"%02zd", indexPath.item + 1];
     
     NSLog(@"###name:%@", name);
     
@@ -222,9 +239,9 @@
     UIImage *image = [UIImage imageWithContentsOfFile:filePath];
     if (collectionView.tag == 1) {
         
-        if (self.localPhotoArr[indexPath.row]) {
+        if (self.localPhotoArr[indexPath.item]) {
             
-            image = self.localPhotoArr[indexPath.row];
+            image = self.localPhotoArr[indexPath.item];
         }
     }
 
@@ -248,8 +265,10 @@
 
 + (nullable UIImage *)imageResize:(nullable UIImage *)image rect:(CGRect)rect {
     
+    NSLog(@"###size:image-rect:%0.0f", image.size.width - rect.size.width);
 
     CGSize size = CGSizeMake(rect.size.width - 10, (rect.size.width - 10) * 2 / 3);
+    
     CGRect newRect = CGRectMake(0, 0, size.width / 2, size.height / 2);
     CGSize newSize = CGSizeMake(newRect.size.width - 10, (newRect.size.width - 10) * 2 / 3);
     if([[UIScreen mainScreen] scale] == 2.0){      // @2x
@@ -285,7 +304,7 @@
     
     if (collectionView.tag == 0) {
         
-        pe.photoFileName = [NSString stringWithFormat:@"%02zd", indexPath.row + 1];
+        pe.photoFileName = [NSString stringWithFormat:@"%02zd", indexPath.item + 1];
         [self.nc1 pushViewController:pe animated:YES];
     }
     else if (collectionView.tag == 1) {
@@ -293,7 +312,7 @@
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
         // 同步获得图片, 只会返回1张图片
         options.synchronous = YES;
-        PHAsset *asset = self.assets[indexPath.row];
+        PHAsset *asset = self.assets[indexPath.item];
         CGSize size = CGSizeMake(asset.pixelWidth, asset.pixelHeight);
         
         // 从asset中获得图片
@@ -306,7 +325,7 @@
         
     }
     
-    NSLog(@"####didSelectItemAtIndexPath:%ld", indexPath.row + 1);
+    NSLog(@"####didSelectItemAtIndexPath:%ld", indexPath.item + 1);
 }
 
 // 下拉刷新
@@ -321,10 +340,10 @@
         } completion:^(BOOL finished) {
             // 发起网络请求
             [scrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
-            [self.collectionView reloadData];
+//            [self.collectionView reloadData];
         }];
     }
-    else if (scrollView.contentOffset.y > 50 ) {
+    else if (scrollView.contentOffset.y > 80 ) {
         
         
         
@@ -335,7 +354,7 @@
                 self.moreLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, scrollView.contentSize.height, self.refreshLabel.frame.size.width, REFRESH_HEIGHT)];
             }
             
-            self.moreLabel.backgroundColor = [UIColor redColor];
+//            self.moreLabel.backgroundColor = [UIColor redColor];
             self.moreLabel.font = [UIFont boldSystemFontOfSize:12.0];
             self.moreLabel.textAlignment = NSTextAlignmentCenter;
             self.moreLabel.text = @"上拉加载";
@@ -344,11 +363,38 @@
             [scrollView addSubview:self.moreLabel];
             
             [scrollView setContentInset:UIEdgeInsetsMake(0, 0, REFRESH_HEIGHT, 0)];
+           
+
+           
             
         } completion:^(BOOL finished) {
             // 发起网络请求
             [scrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
-//            [self.collectionView reloadData];
+            NSLog(@"###count:%ld", [self.collectionView numberOfItemsInSection:0]);
+            
+            self.num ++;
+
+            NSLog(@"###tag:%ld", self.tabTag);
+            
+            if (self.tabTag == 0) {
+                
+                [self.collectionView performBatchUpdates:^{
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView numberOfItemsInSection:0] inSection:0];
+                    [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
+                } completion:nil];
+            }
+            else {
+                
+                [self.collectionView1 performBatchUpdates:^{
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView1 numberOfItemsInSection:0] inSection:0];
+                    [self.collectionView1 insertItemsAtIndexPaths:@[indexPath]];
+                } completion:nil];
+            }
+            
+
+            
+            
+
         }];
     }
 }
@@ -383,5 +429,11 @@
 //
 //    }
 //}
+
+-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item{
+    
+    self.tabTag = item.tag;
+}
+
 
 @end
