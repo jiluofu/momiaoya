@@ -11,5 +11,7 @@
 @interface ViewController : UITabBarController<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITabBarDelegate,UITabBarControllerDelegate>
 
 + (nullable UIImage *)imageResize:(nullable UIImage *)image rect:(CGRect)rect;
+-(void)setMoreNum;
+
 @end
 

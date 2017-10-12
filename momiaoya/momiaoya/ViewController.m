@@ -25,11 +25,13 @@
 @property CGFloat frameHeight;
 @property(nonatomic,strong)UINavigationController *nc1;
 @property(nonatomic,strong)UINavigationController *nc2;
+@property(nonatomic,strong)NSArray *selectedPhotoArr;
 @property(nonatomic,strong)NSMutableArray *localPhotoArr;
 @property(nonatomic,strong)PHFetchResult<PHAsset *> *assets;
 @property(nonatomic,strong)UILabel *refreshLabel;
 @property(nonatomic,strong)UILabel *moreLabel;
 @property NSInteger num;
+@property NSInteger rn;
 @property NSInteger tabTag;
 
 @end
@@ -44,6 +46,7 @@
     
 
     self.num = 10;
+    self.rn = 10;
     CGRect rect = [UIScreen mainScreen].bounds;
     self.frameWidth = rect.size.width - 10;
     self.frameHeight = (rect.size.width - 10) * 2 / 3;
@@ -133,6 +136,7 @@
     
     self.viewControllers = @[self.nc1, self.nc2];
     
+    self.selectedPhotoArr = [[NSBundle mainBundle] pathsForResourcesOfType:@"jpg" inDirectory:@"Photos"];
     
     // 获得相机胶卷
     PHAssetCollection *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil].lastObject;
@@ -229,15 +233,12 @@
     
     
     
-    NSString *name = [NSString stringWithFormat:@"%02zd", indexPath.item + 1];
-    
-    NSLog(@"###name:%@", name);
-    
-//    UIImage *image = [UIImage imageNamed:name];
-    
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:name ofType:@"jpg"];
-    UIImage *image = [UIImage imageWithContentsOfFile:filePath];
-    if (collectionView.tag == 1) {
+    UIImage *image = nil;
+    if (collectionView.tag == 0) {
+        
+        image = [UIImage imageWithContentsOfFile:self.selectedPhotoArr[indexPath.item]];
+    }
+    else if (collectionView.tag == 1) {
         
         if (self.localPhotoArr[indexPath.item]) {
             
@@ -304,7 +305,7 @@
     
     if (collectionView.tag == 0) {
         
-        pe.photoFileName = [NSString stringWithFormat:@"%02zd", indexPath.item + 1];
+        pe.photoFileName = self.selectedPhotoArr[indexPath.item];
         [self.nc1 pushViewController:pe animated:YES];
     }
     else if (collectionView.tag == 1) {
@@ -343,59 +344,103 @@
 //            [self.collectionView reloadData];
         }];
     }
-    else if (scrollView.contentOffset.y > 80 ) {
+    else if (scrollView.contentOffset.y > REFRESH_HEIGHT ) {
+        
+        if (!self.moreLabel) {
+            
+            self.moreLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, scrollView.contentSize.height, self.refreshLabel.frame.size.width, REFRESH_HEIGHT)];
+        }
         
         
+        self.moreLabel.font = [UIFont boldSystemFontOfSize:12.0];
+        self.moreLabel.textAlignment = NSTextAlignmentCenter;
+        self.moreLabel.text = @"上拉加载";
+        self.moreLabel.hidden = YES;
+        NSLog(@"###height:%f", scrollView.frame.size.height);
+        self.moreLabel.frame = CGRectMake(0, scrollView.contentSize.height, self.moreLabel.frame.size.width, self.moreLabel.frame.size.height);
+        [scrollView addSubview:self.moreLabel];
         
-        [UIView animateWithDuration:1.0 animations:^{
-            
-            if (!self.moreLabel) {
-                
-                self.moreLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, scrollView.contentSize.height, self.refreshLabel.frame.size.width, REFRESH_HEIGHT)];
-            }
-            
-//            self.moreLabel.backgroundColor = [UIColor redColor];
-            self.moreLabel.font = [UIFont boldSystemFontOfSize:12.0];
-            self.moreLabel.textAlignment = NSTextAlignmentCenter;
-            self.moreLabel.text = @"上拉加载";
-            NSLog(@"###height:%f", scrollView.frame.size.height);
-            self.moreLabel.frame = CGRectMake(0, scrollView.contentSize.height, self.moreLabel.frame.size.width, self.moreLabel.frame.size.height);
-            [scrollView addSubview:self.moreLabel];
-            
-            [scrollView setContentInset:UIEdgeInsetsMake(0, 0, REFRESH_HEIGHT, 0)];
-           
-
-           
-            
-        } completion:^(BOOL finished) {
-            // 发起网络请求
-            [scrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
-            NSLog(@"###count:%ld", [self.collectionView numberOfItemsInSection:0]);
-            
-            self.num ++;
-
-            NSLog(@"###tag:%ld", self.tabTag);
-            
-            if (self.tabTag == 0) {
-                
-                [self.collectionView performBatchUpdates:^{
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView numberOfItemsInSection:0] inSection:0];
-                    [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
-                } completion:nil];
-            }
-            else {
-                
-                [self.collectionView1 performBatchUpdates:^{
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView1 numberOfItemsInSection:0] inSection:0];
-                    [self.collectionView1 insertItemsAtIndexPaths:@[indexPath]];
-                } completion:nil];
-            }
-            
-
-            
-            
-
-        }];
+        [scrollView setContentInset:UIEdgeInsetsMake(0, 0, REFRESH_HEIGHT, 0)];
+        
+//        self.moreLabel.hidden = YES;
+        NSLog(@"###count:%ld", [self.collectionView numberOfItemsInSection:0]);
+        [self setMoreNum];
+//        self.num += self.rn;
+//
+//        NSLog(@"###tag:%ld", self.tabTag);
+//
+//        if (self.tabTag == 0) {
+//
+//            [self.collectionView performBatchUpdates:^{
+//                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView numberOfItemsInSection:0] inSection:0];
+//                [self.collectionView insertItemsAtIndexPaths:@[indexPath, indexPath]];
+//            } completion:nil];
+//        }
+//        else {
+//
+//            [self.collectionView1 performBatchUpdates:^{
+//                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView1 numberOfItemsInSection:0] inSection:0];
+//                NSMutableArray *indexPathArr = [[NSMutableArray alloc] init];
+//                for (int i = 0; i < self.rn; i ++) {
+//
+//                    [indexPathArr addObject:indexPath];
+//                }
+//                [self.collectionView1 insertItemsAtIndexPaths:indexPathArr];
+//
+//            } completion:nil];
+//        }
+        
+//        [UIView animateWithDuration:0.0 animations:^{
+//
+//            if (!self.moreLabel) {
+//
+//                self.moreLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, scrollView.contentSize.height, self.refreshLabel.frame.size.width, REFRESH_HEIGHT)];
+//            }
+//
+////            self.moreLabel.backgroundColor = [UIColor redColor];
+//            self.moreLabel.font = [UIFont boldSystemFontOfSize:12.0];
+//            self.moreLabel.textAlignment = NSTextAlignmentCenter;
+//            self.moreLabel.text = @"上拉加载";
+//            self.moreLabel.hidden = NO;
+//            NSLog(@"###height:%f", scrollView.frame.size.height);
+//            self.moreLabel.frame = CGRectMake(0, scrollView.contentSize.height, self.moreLabel.frame.size.width, self.moreLabel.frame.size.height);
+//            [scrollView addSubview:self.moreLabel];
+//
+//            [scrollView setContentInset:UIEdgeInsetsMake(0, 0, REFRESH_HEIGHT, 0)];
+//
+//
+//
+//
+//        } completion:^(BOOL finished) {
+//            // 发起网络请求
+////            [scrollView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+//            self.moreLabel.hidden = YES;
+//            NSLog(@"###count:%ld", [self.collectionView numberOfItemsInSection:0]);
+//
+//            self.num ++;
+//
+//            NSLog(@"###tag:%ld", self.tabTag);
+//
+//            if (self.tabTag == 0) {
+//
+//                [self.collectionView performBatchUpdates:^{
+//                    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView numberOfItemsInSection:0] inSection:0];
+//                    [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
+//                } completion:nil];
+//            }
+//            else {
+//
+//                [self.collectionView1 performBatchUpdates:^{
+//                    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView1 numberOfItemsInSection:0] inSection:0];
+//                    [self.collectionView1 insertItemsAtIndexPaths:@[indexPath]];
+//                } completion:nil];
+//            }
+//
+//
+//
+//
+//
+//        }];
     }
 }
 
@@ -434,6 +479,62 @@
     
     self.tabTag = item.tag;
 }
+
+-(void)setMoreNum {
+    
+    
+    NSInteger total = 13;
+    NSInteger moreNum = self.rn;
+    if (self.tabTag == 0) {
+        
+        total = [self.selectedPhotoArr count];
+       
+    }
+    else if (self.tabTag == 1) {
+        
+        total = [self.assets count];
+       
+    }
+    
+    if (self.num + self.rn <= total) {
+        
+        self.num += self.rn;
+    }
+    else {
+        
+        moreNum = self.rn - (self.num + self.rn - total);
+        self.num = total;
+        
+    }
+    
+    if (self.tabTag == 0) {
+        
+        [self.collectionView performBatchUpdates:^{
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView numberOfItemsInSection:0] inSection:0];
+            NSMutableArray *indexPathArr = [[NSMutableArray alloc] init];
+            for (int i = 0; i < moreNum; i ++) {
+                
+                [indexPathArr addObject:indexPath];
+            }
+            [self.collectionView insertItemsAtIndexPaths:indexPathArr];
+        } completion:nil];
+    }
+    else {
+        
+        [self.collectionView1 performBatchUpdates:^{
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.collectionView1 numberOfItemsInSection:0] inSection:0];
+            NSMutableArray *indexPathArr = [[NSMutableArray alloc] init];
+            for (int i = 0; i < moreNum; i ++) {
+                
+                [indexPathArr addObject:indexPath];
+            }
+            [self.collectionView1 insertItemsAtIndexPaths:indexPathArr];
+            
+        } completion:nil];
+    }
+}
+
+
 
 
 @end

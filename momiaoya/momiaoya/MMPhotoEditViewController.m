@@ -22,8 +22,7 @@
     
     self.view.backgroundColor = [UIColor blackColor];
     
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:self.photoFileName ofType:@"jpg"];
-    UIImage *image = [UIImage imageWithContentsOfFile:filePath];
+    UIImage *image = [UIImage imageWithContentsOfFile:self.photoFileName];
     if (self.tag == 1) {
         
         image = self.localPhotoImage;
