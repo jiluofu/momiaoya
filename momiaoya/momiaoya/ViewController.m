@@ -10,21 +10,29 @@
 #import "MMPhotoCell.h"
 #import "MMPhotoEditViewController.h"
 #import "MMTabViewController.h"
+#import "MMARViewController.h"
+#import "MMWorkOutViewController.h"
 
 
 #import <Photos/Photos.h>
+
+
 
 #define PHOTO_CELL @"PHOTO_CELL"
 #define LOCAL_PHOTO_CELL @"LOCAL_PHOTO_CELL"
 #define REFRESH_HEIGHT 50
 
 @interface ViewController ()
+
+
 @property(nonatomic,strong)UICollectionView *collectionView;
 @property(nonatomic,strong)UICollectionView *collectionView1;
 @property CGFloat frameWidth;
 @property CGFloat frameHeight;
 @property(nonatomic,strong)UINavigationController *nc1;
 @property(nonatomic,strong)UINavigationController *nc2;
+@property(nonatomic,strong)UINavigationController *nc3;
+@property(nonatomic,strong)UINavigationController *nc4;
 @property(nonatomic,strong)NSArray *selectedPhotoArr;
 @property(nonatomic,strong)NSMutableArray *localPhotoArr;
 @property(nonatomic,strong)PHFetchResult<PHAsset *> *assets;
@@ -42,8 +50,8 @@
     [super viewDidLoad];
     
     NSLog(@"###test momiaoya");
-    
-    
+
+
 
     self.num = 10;
     self.rn = 10;
@@ -55,14 +63,14 @@
     self.refreshLabel.font = [UIFont boldSystemFontOfSize:12.0];
     self.refreshLabel.textAlignment = NSTextAlignmentCenter;
     self.refreshLabel.text = @"下拉刷新";
-    
+
 //    self.moreLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, REFRESH_HEIGHT, rect.size.width, REFRESH_HEIGHT)];
 //    self.moreLabel.backgroundColor = [UIColor redColor];
 //    self.moreLabel.font = [UIFont boldSystemFontOfSize:12.0];
 //    self.moreLabel.textAlignment = NSTextAlignmentCenter;
 //    self.moreLabel.text = @"上拉加载";
-    
-    
+
+
     rect.size.height = rect.size.height - 49;
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake(self.frameWidth / 2, self.frameHeight / 2);
@@ -70,7 +78,7 @@
     layout.minimumInteritemSpacing = 0;
     layout.sectionInset = UIEdgeInsetsMake(20, 10, 20, 0);
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-    
+
     UICollectionViewFlowLayout *layout1 = [[UICollectionViewFlowLayout alloc] init];
     layout1.itemSize = CGSizeMake(self.frameWidth / 2, self.frameHeight / 2);
     layout1.minimumLineSpacing = 5;
@@ -79,54 +87,54 @@
     layout1.scrollDirection = UICollectionViewScrollDirectionVertical;
 
 
-    
-    
-    
+
+
+
     UIViewController *vc1 = [[UIViewController alloc] init];
     vc1.navigationItem.title = @"自己制作不被APP图标遮挡の墙纸";
     vc1.edgesForExtendedLayout = UIRectEdgeNone;
-    
+
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
     self.collectionView.backgroundColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:0.5];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     self.collectionView.tag = 0;
-    
-    
-    
-    
+
+
+
+
     [self.collectionView registerClass:[MMPhotoCell class] forCellWithReuseIdentifier:PHOTO_CELL];
     [vc1.view addSubview:self.collectionView];
-    
+
     self.nc1 = [[UINavigationController alloc] initWithRootViewController:vc1];
-    
+
     [self.nc1.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                   [UIFont fontWithName:@"Helvetica" size:18.0], NSFontAttributeName, nil]
                         forState:UIControlStateNormal];
     self.nc1.tabBarItem.title = @"精选";
     self.nc2.tabBarItem.tag = 0;
     self.nc1.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, -10);
-    
-    
+
+
     UIViewController *vc2 = [[UIViewController alloc] init];
     vc2.navigationItem.title = @"本地相册";
     vc2.edgesForExtendedLayout = UIRectEdgeNone;
     self.collectionView1 = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout1];
     self.collectionView1.backgroundColor = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:0.5];
-    
+
     self.collectionView1.delegate = self;
     self.collectionView1.dataSource = self;
     self.collectionView1.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     self.collectionView1.tag = 1;
-    
-    
-    
-    
+
+
+
+
     [self.collectionView1 registerClass:[MMPhotoCell class] forCellWithReuseIdentifier:LOCAL_PHOTO_CELL];
     [vc2.view addSubview:self.collectionView1];
     self.nc2 = [[UINavigationController alloc] initWithRootViewController:vc2];
-    
+
     [self.nc2.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                  [UIFont fontWithName:@"Helvetica" size:18.0], NSFontAttributeName, nil]
                                        forState:UIControlStateNormal];
@@ -134,15 +142,48 @@
     self.nc2.tabBarItem.tag = 1;
     self.nc2.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, -10);
     
-    self.viewControllers = @[self.nc1, self.nc2];
     
+
+    
+    // 第3个tab
+    UIViewController *vc3 = [[MMARViewController alloc] init];
+    vc3.navigationItem.title = @"AR";
+    vc3.edgesForExtendedLayout = UIRectEdgeNone;
+
+    self.nc3 = [[UINavigationController alloc] initWithRootViewController:vc3];
+    
+    [self.nc3.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                 [UIFont fontWithName:@"Helvetica" size:18.0], NSFontAttributeName, nil]
+                                       forState:UIControlStateNormal];
+    self.nc3.tabBarItem.title = @"AR";
+//    self.nc3.tabBarItem.tag = 1;
+    self.nc3.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, -10);
+    
+    // 第4个tab
+    UIViewController *vc4 = [[MMWorkOutViewController alloc] init];
+    vc4.navigationItem.title = @"健身";
+    vc4.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    self.nc4 = [[UINavigationController alloc] initWithRootViewController:vc4];
+    
+    [self.nc4.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                 [UIFont fontWithName:@"Helvetica" size:18.0], NSFontAttributeName, nil]
+                                       forState:UIControlStateNormal];
+    self.nc4.tabBarItem.title = @"健身";
+    
+    self.nc4.tabBarItem.titlePositionAdjustment = UIOffsetMake(0, -10);
+    
+
+    self.viewControllers = @[self.nc1, self.nc2, self.nc3, self.nc4];
+
     self.selectedPhotoArr = [[NSBundle mainBundle] pathsForResourcesOfType:@"jpg" inDirectory:@"Photos"];
-    
+
     // 获得相机胶卷
     PHAssetCollection *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil].lastObject;
     // 遍历相机胶卷,获取大图
     [self enumerateAssetsInAssetCollection:cameraRoll original:NO];
-    
+
+
     
     
     
@@ -180,7 +221,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    }
+}
+
 
 // 1个section
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -533,6 +575,8 @@
         } completion:nil];
     }
 }
+
+
 
 
 

@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <SceneKit/SceneKit.h>
+
+#import <ARKit/ARKit.h>
 
 @interface ViewController : UITabBarController<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITabBarDelegate,UITabBarControllerDelegate>
 

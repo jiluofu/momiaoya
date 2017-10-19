@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6309D1DC1F98953E00B7500A /* MMARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6309D1DB1F98953E00B7500A /* MMARViewController.m */; };
+		6309D1DF1F989A8A00B7500A /* MMWorkOutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6309D1DE1F989A8A00B7500A /* MMWorkOutViewController.m */; };
 		633066011F666644008325AE /* MMPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633066001F666644008325AE /* MMPhotoCell.m */; };
 		633066201F67C910008325AE /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6330661F1F67C910008325AE /* Launch Screen.storyboard */; };
 		635CED911F8DEC9800C56DF5 /* Photos in Resources */ = {isa = PBXBuildFile; fileRef = 635CED901F8DEC9700C56DF5 /* Photos */; };
@@ -18,6 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6309D1DA1F98953E00B7500A /* MMARViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMARViewController.h; sourceTree = "<group>"; };
+		6309D1DB1F98953E00B7500A /* MMARViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMARViewController.m; sourceTree = "<group>"; };
+		6309D1DD1F989A8A00B7500A /* MMWorkOutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMWorkOutViewController.h; sourceTree = "<group>"; };
+		6309D1DE1F989A8A00B7500A /* MMWorkOutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMWorkOutViewController.m; sourceTree = "<group>"; };
 		633065FF1F666644008325AE /* MMPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoCell.h; sourceTree = "<group>"; };
 		633066001F666644008325AE /* MMPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoCell.m; sourceTree = "<group>"; };
 		6330661F1F67C910008325AE /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -77,6 +83,10 @@
 				63A76FCD1F6B87B4001492C4 /* MMPhotoEditViewController.m */,
 				6364A4E71F62921600F3E09F /* Info.plist */,
 				6364A4D61F62921600F3E09F /* Supporting Files */,
+				6309D1DA1F98953E00B7500A /* MMARViewController.h */,
+				6309D1DB1F98953E00B7500A /* MMARViewController.m */,
+				6309D1DD1F989A8A00B7500A /* MMWorkOutViewController.h */,
+				6309D1DE1F989A8A00B7500A /* MMWorkOutViewController.m */,
 			);
 			path = momiaoya;
 			sourceTree = "<group>";
@@ -167,6 +177,8 @@
 				6364A4DE1F62921600F3E09F /* ViewController.m in Sources */,
 				6364A4DB1F62921600F3E09F /* AppDelegate.m in Sources */,
 				6364A4D81F62921600F3E09F /* main.m in Sources */,
+				6309D1DF1F989A8A00B7500A /* MMWorkOutViewController.m in Sources */,
+				6309D1DC1F98953E00B7500A /* MMARViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
